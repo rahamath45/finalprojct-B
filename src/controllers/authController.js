@@ -21,23 +21,26 @@ export const Register = async (req,res)=>{
         const salt = await bcrypt.genSalt(Number(process.env.ENCRYPT_SALT_ROUNDS));
         const hashedpassword = await bcrypt.hash(password,salt);
 
-         const token = jwt.sign({
-                id:user._id ,role:user.role
-        },process.env.JWT_AUTH_SECRET_KEY,{expiresIn: "7d"});
-
+         
         const newUser = new User({
             name,
             email,
             password:hashedpassword,
             fitnessGoals,
             role,
-            token
         });
         await newUser.save();
+        const token = jwt.sign({
+                id:newUser._id ,role:newUser.role
+        },process.env.JWT_AUTH_SECRET_KEY,{expiresIn: "7d"});
+
         res.status(201).json({
             status:"success",
             message:"user registered successfully",
-            data:newUser,
+             data:{
+                newUser,
+                 token
+             }
         })
      }catch(err){
         console.log(err)

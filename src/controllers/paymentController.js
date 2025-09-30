@@ -1,29 +1,25 @@
 import Stripe from "stripe";
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
  
-export const payment = async(req,res)=>{
-     try {
-    const { token, amount, bookingId} = req.body;
-       const email = req.user.email;
-        const customer = await stripe.customers.create({
-        email,
-        source: token.id,
-      });
-     let  customerId = customer.id;
-    const charge = await stripe.charges.create({
+export const payment = async (req, res) => {
+  try {
+    const { token, amount, bookingId } = req.body;
+    const email = req.user.email;
+
+    const paymentIntent = await stripe.paymentIntents.create({
       amount,
       currency: "usd",
-      customer: customerId, 
-      description: `Payment for booking ${bookingId}`,
-      receipt_email: email,
+      payment_method: token,
+      confirm: true,
+      automatic_payment_methods: {
+        enabled: true,
+        allow_redirects: "never",
+      },
     });
 
-    res.json({ success: true, charge });
+    res.json({ success: true, paymentIntent });
   } catch (err) {
     console.error("Stripe Error:", err.message);
     res.status(500).json({ success: false, message: err.message });
   }
 };
-    
-
-

@@ -38,14 +38,31 @@ export const createTrainers = async (req,res) =>{
         message:"trainers fetched successfully",
          trainers
  }) };
- 
+ // get my id
+ export const Mytrainer = async (req,res)=>{
+        try {
+    const trainer = await Trainer.findById(req.params.id);
+    if (!trainer) return res.status(404).json({ message: "Trainer not found" });
+    res.json(trainer);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+ }
 
 export const updateTrainer = async (req, res) => {
   try {
     const { id } = req.params; 
-    const updates = req.body;  
+    const updates = {...req.body};  
+     if (req.files?.photo) {
+      updates.photo = req.files.photo[0].filename;
+    }
 
-    const trainer = await Trainer.findByIdAndUpdate(id, updates, {new: true, runValidators: true,  });
+    if (req.files?.introVideo) {
+      // force forward slash for path
+      updates.introVideo = req.files.introVideo[0].filename;
+    }
+
+    const trainer = await Trainer.findByIdAndUpdate(id,  updates, {new: true, runValidators: true,  });
     if (!trainer) {
       return res.status(404).json({
         status: "error",

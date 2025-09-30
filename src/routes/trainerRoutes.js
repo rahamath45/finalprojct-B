@@ -1,7 +1,7 @@
 import { Router } from "express";
 import multer from "multer";
 import path from "path";
-import { addreview, createTrainers,  getAllTrainers,  respondToReview, updateTrainer } from "../controllers/trainerController.js";
+import { addreview, createTrainers,  getAllTrainers,  Mytrainer,  respondToReview, updateTrainer } from "../controllers/trainerController.js";
 import { authorise } from "../middlewares/authorizeRole.js";
 import {  protect } from "../middlewares/authMiddleware.js";
 
@@ -21,10 +21,13 @@ trainerRoutes.use(protect)
 // create trainer 
 trainerRoutes.post("/",uploads.fields([{ name:"photo"},{name:"introVideo"}]),authorise("trainer"),createTrainers);
 // get update
-trainerRoutes.put("/:id",authorise("trainer"), updateTrainer);
+trainerRoutes.put("/:id", uploads.fields([{ name: "photo" }, { name: "introVideo" }]),authorise("trainer"), updateTrainer);
 
 // get all trainer
 trainerRoutes.get("/",getAllTrainers)
+
+// get my id
+trainerRoutes.get("/:id",Mytrainer)
 
 // add review
 trainerRoutes.post("/:id/review",authorise("user"),addreview);

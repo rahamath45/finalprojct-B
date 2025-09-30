@@ -71,9 +71,11 @@ export const recommendClasses = async (req, res) => {
 
     // Example: recommend based on user.preference or last booking type
     const preferredType = user.fitnessGoals || "yoga"; 
+    console.log(preferredType)
  
     const recommended = await Class.find({ type: preferredType }).limit(5)
       .populate("trainer", "name expertise");
+      console.log(recommended)
     res.status(200).json({
       status: "success",
       recommended,
