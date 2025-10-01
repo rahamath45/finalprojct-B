@@ -6,24 +6,20 @@ export const payment = async (req, res) => {
     const { token, amount, bookingId, postalCode, name } = req.body;
     const email = req.user.email;
 
-    // 1️⃣ Create PaymentIntent with billing details
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount,
-      currency: "usd",
-      payment_method: token,
-      confirmation_method: "manual",
-      confirm: true,
-      receipt_email: email,
-      description: `Payment for booking ${bookingId}`,
-      payment_method_data: {
-        billing_details: {
-          name,
-          address: {
-            postal_code: postalCode,
-          },
-        },
-      },
-    });
+       const paymentIntent = await stripe.paymentIntents.create({
+  amount,
+  currency: "usd",
+  automatic_payment_methods: {
+    enabled: true,
+    allow_redirects: "any", // allows 3D Secure redirect if required
+  },
+  confirm: true,
+  receipt_email: email,
+  description: `Payment for booking ${bookingId}`,
+  payment_method: token,
+  return_url: "https://yourdomain.com/bookings/success", // redirect after 3D Secure
+});
+
 
     res.json({ success: true, paymentIntent });
   } catch (err) {
