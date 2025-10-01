@@ -11,7 +11,7 @@ export const payment = async (req, res) => {
   currency: "usd",
   automatic_payment_methods: {
     enabled: true,
-    allow_redirects: "any", // allows 3D Secure redirect if required
+    allow_redirects: "always", // allows 3D Secure redirect if required
   },
   confirm: true,
   receipt_email: email,
