@@ -36,13 +36,8 @@ export const createbooking = async(req,res) => {
                   date:bookingDate
             })
             await booking.save();
-            res.status(201).json({
-             status:"success",
-             message:"Booking created",
-             booking
-        })
 
-          sendEmail(
+         await  sendEmail(
                req.user.email,
          "Booking confirmed",
          ` <p> Dear ${req.user.name}</p>
@@ -51,7 +46,11 @@ export const createbooking = async(req,res) => {
              <p>  we wil you give best always  </p>
                           <p> thanking you </p>`
       );
-   
+    res.status(201).json({
+             status:"success",
+             message:"Booking created",
+             booking
+        })
         
         }catch(err){
                res.status(500).json({ message: err.message});
@@ -95,14 +94,9 @@ export const reschedule = async(req,res) =>{
 
                 booking.date = newDateObj;
                  booking.status = "rescheduled";
-                await booking.save();
-                 res.status(201).json({
-             status:"success",
-             message:"Booking rescheduled",
-             booking
-        })
-
-                 sendEmail(
+                 await booking.save();
+               
+             await  sendEmail(
                req.user.email,
          "Booking Rescheduled",
          ` <p> Dear ${req.user.name}</p>
@@ -111,7 +105,13 @@ export const reschedule = async(req,res) =>{
              <p>                         we wil you give best always  </p>
                           <p> thanking you </p>`
       );
-      
+       
+                 res.status(201).json({
+             status:"success",
+             message:"Booking rescheduled",
+             booking
+        })
+
    
            }catch(err){
                  res.status(500).json({ message: "Server error", error: err.message });
@@ -129,20 +129,19 @@ export const cancel = async(req,res) =>{
                  return res.status(403).json({ message:"you can only cancel your booking"})
                }
             await Booking.findByIdAndDelete(bookingId);
-             res.status(201).json({
-             status:"success",
-             message:"Booking cancelled",
-             booking
-        })
-               sendEmail(
+             
+             await  sendEmail(
                req.user.email,
          "Booking cancelled",
          ` <p> Dear ${req.user.name}</p>
                 Your booking fro ${booking.class?.title || "class"}
                 on ${booking.date.toLocaleString()} has been cancelled.`
       );
-   
-       
+      res.status(201).json({
+             status:"success",
+             message:"Booking cancelled",
+             booking
+        })
       }catch(err){
              res.status(500).json({ message: "Server error", error: err.message });
   
