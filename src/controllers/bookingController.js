@@ -36,8 +36,14 @@ export const createbooking = async(req,res) => {
                   date:bookingDate
             })
             await booking.save();
-
-         await  sendEmail(
+             res.status(201).json({
+             status:"success",
+             message:"Booking created",
+             booking
+        })
+              setImmediate(() => {
+        
+           sendEmail(
                req.user.email,
          "Booking confirmed",
          ` <p> Dear ${req.user.name}</p>
@@ -45,17 +51,14 @@ export const createbooking = async(req,res) => {
            <p>  thank you for booking fitness classes </p>
              <p>  we wil you give best always  </p>
                           <p> thanking you </p>`
-      );
-    res.status(201).json({
-             status:"success",
-             message:"Booking created",
-             booking
-        })
-        
+      )
+      .catch(err => console.error("Email failed:", err.message));
+    });
+
         }catch(err){
                res.status(500).json({ message: err.message});
         }
-}
+      }
 
 export const getmybooking = async(req,res) =>{
       try {
@@ -95,8 +98,15 @@ export const reschedule = async(req,res) =>{
                 booking.date = newDateObj;
                  booking.status = "rescheduled";
                  await booking.save();
+                 
+                 res.status(201).json({
+             status:"success",
+             message:"Booking rescheduled",
+             booking
+        })
                
-             await  sendEmail(
+               setImmediate(() => {
+      sendEmail(
                req.user.email,
          "Booking Rescheduled",
          ` <p> Dear ${req.user.name}</p>
@@ -104,13 +114,10 @@ export const reschedule = async(req,res) =>{
                               <p>      thank you for booking fitness classes </p>
              <p>                         we wil you give best always  </p>
                           <p> thanking you </p>`
-      );
+    
+      ).catch(err => console.error("Email failed:", err.message));
+    });
        
-                 res.status(201).json({
-             status:"success",
-             message:"Booking rescheduled",
-             booking
-        })
 
    
            }catch(err){
@@ -130,18 +137,21 @@ export const cancel = async(req,res) =>{
                }
             await Booking.findByIdAndDelete(bookingId);
              
-             await  sendEmail(
-               req.user.email,
-         "Booking cancelled",
-         ` <p> Dear ${req.user.name}</p>
-                Your booking fro ${booking.class?.title || "class"}
-                on ${booking.date.toLocaleString()} has been cancelled.`
-      );
+            
       res.status(201).json({
              status:"success",
              message:"Booking cancelled",
              booking
         })
+         setImmediate(() => {
+      sendEmail(
+        req.user.email,
+        "Booking Cancelled",
+        `<p>Dear ${req.user.name}</p>
+         <p>Your booking for ${booking.class?.title || "class"} 
+         on ${booking.date.toLocaleString()} has been cancelled.</p>`
+      ).catch(err => console.error("Email failed:", err.message));
+    });
       }catch(err){
              res.status(500).json({ message: "Server error", error: err.message });
   
