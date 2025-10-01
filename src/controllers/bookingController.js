@@ -111,6 +111,7 @@ export const reschedule = async(req,res) =>{
              <p>                         we wil you give best always  </p>
                           <p> thanking you </p>`
       );
+      
    
            }catch(err){
                  res.status(500).json({ message: "Server error", error: err.message });
