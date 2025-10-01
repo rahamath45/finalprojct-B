@@ -14,7 +14,11 @@ dotenv.config();
 
 const app = express();
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+         origin: "https://fitnessfinal.netlify.app", // frontend URL
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true,
+}));
 app.use("/uploads", express.static("uploads"));
 
 app.use("/api/auth",authRoutes);
