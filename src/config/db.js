@@ -6,7 +6,11 @@ const connectDB = () => {
 
             
 
-    mongoose.connect(mongodbURI)
+    mongoose.connect(mongodbURI,{
+        useNewUrlParser: true,
+  useUnifiedTopology: true,
+  serverSelectionTimeoutMS: 30000,
+    })
      .then(()=>{
         console.log("connected to mongoDB database");
     })
