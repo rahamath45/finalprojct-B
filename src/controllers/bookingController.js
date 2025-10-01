@@ -42,7 +42,7 @@ export const createbooking = async(req,res) => {
              booking
         })
 
-         await sendEmail(
+          sendEmail(
                req.user.email,
          "Booking confirmed",
          ` <p> Dear ${req.user.name}</p>
@@ -102,7 +102,7 @@ export const reschedule = async(req,res) =>{
              booking
         })
 
-                 await sendEmail(
+                 sendEmail(
                req.user.email,
          "Booking Rescheduled",
          ` <p> Dear ${req.user.name}</p>
@@ -133,7 +133,7 @@ export const cancel = async(req,res) =>{
              message:"Booking cancelled",
              booking
         })
-              await sendEmail(
+               sendEmail(
                req.user.email,
          "Booking cancelled",
          ` <p> Dear ${req.user.name}</p>
