@@ -52,7 +52,7 @@ export const createbooking = async(req,res) => {
              <p>  we wil you give best always  </p>
                           <p> thanking you </p>`
       )
-      .catch(err => console.error("Email failed:", err.message));
+      .catch(err => console.log("Email failed:", err.message));
     });
 
         }catch(err){
