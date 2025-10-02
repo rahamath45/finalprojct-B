@@ -23,7 +23,7 @@ export const forgotpassword = async (req,res) =>{
                );
 
         const resetLink = `${process.env.FRONTEND_URL}/reset-password/${token}`;
-         await sendEmail(user.email,"password reset",`<p> you are recieving the email because you has requested a password reset for your account</p>
+          sendEmail(user.email,"password reset",`<p> you are recieving the email because you has requested a password reset for your account</p>
             <p>click <a href="${resetLink}">here</a>  to reset you password</p>`)
          res.status(200).json({
                 status:"success", 
@@ -31,7 +31,7 @@ export const forgotpassword = async (req,res) =>{
                 token
          })
        }catch (err) {
-        res.status(500).json({ error: err.message });
+        res.status(500).json({ error: "not send email" + err.message });
     }
 };
 
