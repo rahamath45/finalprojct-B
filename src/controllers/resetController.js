@@ -26,7 +26,7 @@ export const forgotpassword = async (req,res) =>{
           
 
 // 2️⃣ send email in background
- await sendEmail(
+  sendEmail(
   user.email,
   "Password reset",
   `<p>You requested a password reset</p>
