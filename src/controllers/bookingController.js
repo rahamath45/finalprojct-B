@@ -36,14 +36,8 @@ export const createbooking = async(req,res) => {
                   date:bookingDate
             })
             await booking.save();
-             res.status(201).json({
-             status:"success",
-             message:"Booking created",
-             booking
-        })
-              setImmediate(() => {
-        
-           sendEmail(
+            
+         await  sendEmail(
                req.user.email,
          "Booking confirmed",
          ` <p> Dear ${req.user.name}</p>
@@ -53,7 +47,12 @@ export const createbooking = async(req,res) => {
                           <p> thanking you </p>`
       )
       .catch(err => console.log("Email failed:", err.message));
-    });
+         
+       res.status(201).json({
+             status:"success",
+             message:"Booking created",
+             booking
+        })
 
         }catch(err){
                res.status(500).json({ message: err.message});
