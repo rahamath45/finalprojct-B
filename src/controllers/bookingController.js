@@ -103,9 +103,8 @@ export const reschedule = async(req,res) =>{
              message:"Booking rescheduled",
              booking
         })
-               
-               setImmediate(() => {
-      sendEmail(
+
+     await sendEmail(
                req.user.email,
          "Booking Rescheduled",
          ` <p> Dear ${req.user.name}</p>
@@ -114,11 +113,7 @@ export const reschedule = async(req,res) =>{
              <p>                         we wil you give best always  </p>
                           <p> thanking you </p>`
     
-      ).catch(err => console.error("Email failed:", err.message));
-    });
-       
-
-   
+      )
            }catch(err){
                  res.status(500).json({ message: "Server error", error: err.message });
   
@@ -136,13 +131,13 @@ export const cancel = async(req,res) =>{
                }
             await Booking.findByIdAndDelete(bookingId);
              
-      sendEmail(
+    await  sendEmail(
         req.user.email,
         "Booking Cancelled",
         `<p>Dear ${req.user.name}</p>
          <p>Your booking for ${booking.class?.title || "class"} 
          on ${booking.date.toLocaleString()} has been cancelled.</p>`
-      ).catch(err => console.error("Email failed:", err.message));
+      )
           res.status(201).json({
              status:"success",
              message:"Booking cancelled",
