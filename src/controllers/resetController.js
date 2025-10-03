@@ -23,21 +23,20 @@ export const forgotpassword = async (req,res) =>{
                );
 
         const resetLink = `${process.env.FRONTEND_URL}/reset-password/${token}`;
-           res.status(200).json({
-  status:"success", 
-  message:"password reset link sent to email",
-  token
-});
+          
 
 // 2️⃣ send email in background
-sendEmail(
+ await sendEmail(
   user.email,
   "Password reset",
   `<p>You requested a password reset</p>
    <p>Click <a href="${resetLink}">here</a> to reset your password</p>`
 )
-  .then(() => console.log("✅ Email sent successfully"))
-  .catch(err => console.error("❌ Email failed:", err.message));
+   res.status(200).json({
+  status:"success", 
+  message:"password reset link sent to email",
+  token
+});
        }catch (err) {
         res.status(500).json({ error: "not send email" + err.message });
     }
