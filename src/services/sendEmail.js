@@ -2,7 +2,7 @@ import nodemailer from "nodemailer";
 
 export const sendEmail = async (to,subject,html)=>{
       
-  comsole.log()
+
   const transporter = nodemailer.createTransport({
         service:"gmail",
         port: 587,
